@@ -153,7 +153,8 @@ Live Demo : https://anime-frontend-nu.vercel.app
 - **CORS** - Cross-origin resource sharing
 
 ### **External APIs**
-- **HiAnime API** - Anime data and streaming links
+- **AniList GraphQL API** - Anime metadata, search, rankings, genres, studios, and recommendations
+- **HiAnime-compatible API** - Legacy streaming-server and source integration only
 - **Groq AI** - AI chat functionality
 
 ## 📁 Project Architecture
@@ -244,7 +245,12 @@ MONGODB_URI=mongodb://localhost:27017/anime-streaming
 JWT_SECRET=your-super-secret-jwt-key
 
 # External APIs
-BACKEND_URL=https://api.hianime.to
+# Public metadata API (no API key required)
+ANILIST_API_URL=https://graphql.anilist.co
+ANILIST_CACHE_TTL_MS=300000
+
+# Optional legacy streaming provider. AniList does not provide video sources.
+BACKEND_URL=
 SELF_URL=http://localhost:6789
 
 # AI Chat (Groq)
@@ -407,4 +413,3 @@ npm start        # Start production server
 <!-- Made with ❤️ for the anime community -->
 
 </div>
-

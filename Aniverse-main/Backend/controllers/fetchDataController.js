@@ -3,6 +3,15 @@ import AnimeData from "../models/AnimeData.js";
 import StreamLink from "../models/StreamLink.js";
 import Episode from "../models/EpisodeModel.js";
 import User from "../models/authModel.js";
+import {
+  getAnimeDetails,
+  getAnimeEpisodes,
+  getCategoryData,
+  getGenreData,
+  getHomeData,
+  getProducerData,
+  searchAnime,
+} from "../services/anilistService.js";
 
 const backendUrl = process.env.BACKEND_URL;
 const proxyBaseUrl = process.env.SELF_URL || "http://localhost:6789";
@@ -10,10 +19,10 @@ const proxyBaseUrl = process.env.SELF_URL || "http://localhost:6789";
 
 export const fetchHomeData = async (req, res) => {
   try {
-    const response = await axios.get(backendUrl + "/api/v2/hianime/home");
-    return res.json({ success: true, data: response.data });
+    const data = await getHomeData();
+    return res.json({ success: true, data: { data } });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(error.response?.status || 502).json({ success: false, message: error.message });
   }
 };
 
@@ -21,12 +30,10 @@ export const fetchCategoryData = async (req, res) => {
   try {
     const name = req.params.name;
     const page = req.params.page;
-    const response = await axios.get(
-      backendUrl + `/api/v2/hianime/category/${name}?page=${page}`
-    );
-    return res.json({ success: true, data: response.data });
+    const data = await getCategoryData(name, page);
+    return res.json({ success: true, data: { data } });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(error.response?.status || 502).json({ success: false, message: error.message });
   }
 };
 
@@ -34,24 +41,21 @@ export const fetchGenreData = async (req, res) => {
   try {
     const name = req.params.name;
     const page = req.params.page;
-    const response = await axios.get(
-      backendUrl + `/api/v2/hianime/genre/${name}?page=${page}`
-    );
-    return res.json({ success: true, data: response.data });
+    const data = await getGenreData(name, page);
+    return res.json({ success: true, data: { data } });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(error.response?.status || 502).json({ success: false, message: error.message });
   }
 };
 
 export const fetchAnimeData = async (req, res) => {
   try {
     const id = req.params.id;
-    const response = await axios.get(
-      backendUrl + `/api/v2/hianime/anime/${id}`
-    );
-    return res.json({ success: true, data: response.data });
+    const data = await getAnimeDetails(id);
+    return res.json({ success: true, data: { data } });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    const status = error.message.includes("numeric") ? 400 : error.response?.status || 502;
+    res.status(status).json({ success: false, message: error.message });
   }
 };
 
@@ -59,24 +63,21 @@ export const fetchProducerData = async (req, res) => {
   try {
     const name = req.params.name;
     const page = req.params.page;
-    const response = await axios.get(
-      backendUrl + `/api/v2/hianime/producer/${name}?page=${page}`
-    );
-    return res.json({ success: true, data: response.data });
+    const data = await getProducerData(name, page);
+    return res.json({ success: true, data: { data } });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(error.response?.status || 502).json({ success: false, message: error.message });
   }
 };
 
 export const fetchEpisodesData = async (req, res) => {
   try {
     const id = req.params.id;
-    const response = await axios.get(
-      backendUrl + `/api/v2/hianime/anime/${id}/episodes`
-    );
-    return res.json({ success: true, data: response.data });
+    const data = await getAnimeEpisodes(id);
+    return res.json({ success: true, data: { data } });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    const status = error.message.includes("numeric") ? 400 : error.response?.status || 502;
+    res.status(status).json({ success: false, message: error.message });
   }
 };
 
@@ -95,24 +96,20 @@ export const fetchEpisodesServerData = async (req, res) => {
 export const fetchSearchSuggestions = async (req, res) => {
   try {
     const q = req.params.q;
-    const response = await axios.get(
-      backendUrl + `/api/v2/hianime/search/suggestion?q=${q}`
-    );
-    return res.json({ success: true, data: response.data });
+    const data = await searchAnime(q, true);
+    return res.json({ success: true, data: { data } });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(error.response?.status || 502).json({ success: false, message: error.message });
   }
 };
 
 export const fetchSearchResult = async (req, res) => {
   try {
     const q = req.params.q;
-    const response = await axios.get(
-      backendUrl + `/api/v2/hianime/search?q=${q}`
-    );
-    return res.json({ success: true, data: response.data });
+    const data = await searchAnime(q, false);
+    return res.json({ success: true, data: { data } });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(error.response?.status || 502).json({ success: false, message: error.message });
   }
 };
 

@@ -1,8 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React, { useCallback, useRef, useEffect, useState } from "react";
 import Title from "./Title";
 import { FaHeart, FaBookmark, FaPlay } from "react-icons/fa";
 import { MdVideoLibrary, MdVerified, MdSecurity } from "react-icons/md";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
@@ -28,6 +27,121 @@ export default function AnimeCards({
   const { success, error, loading, dismiss } = useToast();
   const scrollRef = useRef(null);
   const safeData = Array.isArray(data) ? data : [];
+  const loadMoreRef = useRef(null);
+  const sentinelVisibleRef = useRef(false);
+  const userScrollIntentRef = useRef(false);
+  const requestInFlightRef = useRef(false);
+  const fetchMoreDataRef = useRef(fetchMoreData);
+  const hasMoreRef = useRef(hasMore);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+
+  useEffect(() => {
+    fetchMoreDataRef.current = fetchMoreData;
+    hasMoreRef.current = hasMore;
+  }, [fetchMoreData, hasMore]);
+
+  useEffect(() => {
+    if (scroll) return undefined;
+
+    const root = document.documentElement;
+    const body = document.body;
+    const previousRootValue = root.style.overflowAnchor;
+    const previousBodyValue = body.style.overflowAnchor;
+
+    // New cards are inserted before the loader sentinel and the footer. Disable
+    // document-level scroll anchoring so the browser does not follow them down.
+    root.style.overflowAnchor = 'none';
+    body.style.overflowAnchor = 'none';
+
+    return () => {
+      root.style.overflowAnchor = previousRootValue;
+      body.style.overflowAnchor = previousBodyValue;
+    };
+  }, [scroll]);
+
+  const requestMore = useCallback(() => {
+    if (
+      !userScrollIntentRef.current ||
+      !sentinelVisibleRef.current ||
+      requestInFlightRef.current ||
+      !hasMoreRef.current ||
+      typeof fetchMoreDataRef.current !== 'function'
+    ) {
+      return;
+    }
+
+    userScrollIntentRef.current = false;
+    requestInFlightRef.current = true;
+    setIsFetchingMore(true);
+
+    Promise.resolve(fetchMoreDataRef.current())
+      .catch(() => {})
+      .finally(() => {
+        requestInFlightRef.current = false;
+        setIsFetchingMore(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (scroll) return undefined;
+
+    const registerScrollIntent = (event) => {
+      if (requestInFlightRef.current) return;
+      if (event.type === 'wheel' && event.deltaY <= 0) return;
+
+      if (event.type === 'keydown') {
+        const target = event.target;
+        const isEditing = target instanceof HTMLElement && (
+          target.isContentEditable ||
+          target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT'
+        );
+        if (isEditing || !['ArrowDown', 'PageDown', 'End', ' '].includes(event.key)) return;
+      }
+
+      userScrollIntentRef.current = true;
+      requestMore();
+    };
+
+    const registerScrollbarIntent = (event) => {
+      if (
+        !requestInFlightRef.current &&
+        event.clientX >= document.documentElement.clientWidth
+      ) {
+        userScrollIntentRef.current = true;
+        requestMore();
+      }
+    };
+
+    window.addEventListener('wheel', registerScrollIntent, { passive: true });
+    window.addEventListener('touchmove', registerScrollIntent, { passive: true });
+    window.addEventListener('keydown', registerScrollIntent);
+    window.addEventListener('pointerdown', registerScrollbarIntent, { passive: true });
+
+    return () => {
+      window.removeEventListener('wheel', registerScrollIntent);
+      window.removeEventListener('touchmove', registerScrollIntent);
+      window.removeEventListener('keydown', registerScrollIntent);
+      window.removeEventListener('pointerdown', registerScrollbarIntent);
+    };
+  }, [requestMore, scroll]);
+
+  useEffect(() => {
+    if (scroll || !loadMoreRef.current) return undefined;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      sentinelVisibleRef.current = entry.isIntersecting;
+      if (entry.isIntersecting) requestMore();
+    }, {
+      root: null,
+      rootMargin: '0px 0px 150px 0px',
+      threshold: 0,
+    });
+
+    observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [requestMore, scroll]);
 
   const handleAddToFavorites = async (item) => {
     if (!user) {
@@ -292,21 +406,19 @@ export default function AnimeCards({
         </div>
       ) : (
         <div className="w-full">
-          <InfiniteScroll
-            dataLength={safeData.length}
-            next={fetchMoreData}
-            hasMore={hasMore}
-            loader={
-              <div className="col-span-full flex justify-center items-center py-8">
-                <LoadingAnimation />
-              </div>
-            }
-           
+          <div
             className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5 lg:gap-6"
-            style={{ overflow: 'visible' }}
+            style={{ overflowAnchor: 'none' }}
           >
             {safeData.map(renderCard)}
-          </InfiniteScroll>
+          </div>
+          <div
+            ref={loadMoreRef}
+            className="flex min-h-8 items-center justify-center py-4"
+            style={{ overflowAnchor: 'none' }}
+          >
+            {isFetchingMore && <LoadingAnimation />}
+          </div>
         </div>
       )}
     </div>
