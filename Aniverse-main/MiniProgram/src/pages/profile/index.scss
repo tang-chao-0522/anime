@@ -1,0 +1,15 @@
+.profile-login { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 60px 120px; }
+.profile-login__icon { width: 130px; height: 130px; border-radius: 38px; background: #f47521; color: #111; font-size: 82px; font-weight: 900; line-height: 130px; text-align: center; }
+.profile-login__title { margin-top: 36px; color: #fff; font-size: 34px; font-weight: 800; text-align: center; }
+.profile-login__sub { margin-top: 14px; font-size: 25px; text-align: center; }
+.profile-login__btn { width: 100%; margin-top: 40px; }
+.profile__banner { display: flex; align-items: center; padding: 50px 32px; background: linear-gradient(135deg, #2c180f, #131419 65%); }
+.profile__avatar { flex: none; width: 126px; height: 126px; border: 4px solid #f47521; border-radius: 63px; background: #24262b; color: #fff; font-size: 57px; font-weight: 800; line-height: 118px; text-align: center; }
+.profile__identity { display: flex; flex-direction: column; min-width: 0; margin-left: 26px; }
+.profile__name { color: #fff; font-size: 38px; font-weight: 900; }
+.profile__email { margin-top: 10px; color: #999ba2; font-size: 24px; }
+.profile__tools { display: flex; justify-content: space-between; margin: 22px 28px; padding: 24px; border-radius: 12px; background: #191a1f; color: #e1e1e3; font-size: 25px; }
+.profile__tabs { width: 100%; border-bottom: 1px solid #292a30; white-space: nowrap; }
+.profile__tab-row { display: flex; padding: 0 28px; }
+.profile__tab { padding: 22px 28px; color: #898b91; font-size: 27px; }
+.profile__tab.is-active { border-bottom: 5px solid #f47521; color: #f47521; font-weight: 800; }

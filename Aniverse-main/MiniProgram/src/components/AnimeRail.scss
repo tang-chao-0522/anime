@@ -1,0 +1,5 @@
+.rail { margin-top: 38px; }
+.rail__title { display: block; margin: 0 28px 20px; color: #fff; font-size: 34px; font-weight: 800; }
+.rail__title::before { content: ''; display: inline-block; width: 8px; height: 30px; margin-right: 14px; border-radius: 4px; background: #f47521; vertical-align: -3px; }
+.rail__scroll { width: 100%; white-space: nowrap; }
+.rail__content { display: flex; padding: 0 28px; }

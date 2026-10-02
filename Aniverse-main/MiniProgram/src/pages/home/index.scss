@@ -1,0 +1,13 @@
+.home { padding-bottom: 40px; }
+.hero { height: 700px; }
+.hero__item { position: relative; width: 100%; height: 100%; background: #16171b; }
+.hero__image { width: 100%; height: 100%; }
+.hero__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9,10,12,.05) 12%, rgba(9,10,12,.2) 45%, #090a0c 98%); }
+.hero__content { position: absolute; left: 36px; right: 36px; bottom: 74px; }
+.hero__eyebrow { display: block; color: #f47521; font-size: 24px; font-weight: 700; letter-spacing: 3px; }
+.hero__title { display: -webkit-box; margin-top: 12px; overflow: hidden; color: #fff; font-size: 54px; font-weight: 900; line-height: 66px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.hero__meta { display: block; margin-top: 12px; color: #d5d5d8; font-size: 25px; }
+.hero__play { width: 210px; margin-top: 26px; padding: 18px 20px; border-radius: 10px; background: #f47521; color: #111; font-size: 25px; font-weight: 800; text-align: center; }
+.home__genres { margin-top: 30px; }
+.genre-cloud { display: flex; flex-wrap: wrap; gap: 16px; }
+.genre-chip { padding: 16px 24px; border: 1px solid #35373e; border-radius: 30px; background: #18191e; color: #d8d8da; font-size: 24px; }

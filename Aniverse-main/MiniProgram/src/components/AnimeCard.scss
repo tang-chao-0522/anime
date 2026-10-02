@@ -1,0 +1,10 @@
+.anime-card { width: 330px; margin-bottom: 28px; }
+.anime-card--compact { width: 250px; margin-right: 20px; flex: none; }
+.anime-card__poster-wrap { position: relative; width: 100%; height: 480px; overflow: hidden; border-radius: 14px; background: #1b1d22; }
+.anime-card--compact .anime-card__poster-wrap { height: 360px; }
+.anime-card__poster { width: 100%; height: 100%; }
+.anime-card__rating { position: absolute; top: 12px; left: 12px; padding: 5px 10px; border-radius: 8px; background: rgba(9,10,12,.82); color: #f8b48a; font-size: 20px; }
+.anime-card__heart { position: absolute; right: 12px; bottom: 12px; width: 62px; height: 62px; border-radius: 31px; background: rgba(9,10,12,.82); color: #fff; font-size: 42px; line-height: 58px; text-align: center; }
+.anime-card__heart.is-liked { color: #f47521; }
+.anime-card__name { display: -webkit-box; margin-top: 14px; overflow: hidden; color: #f7f7f8; font-size: 27px; font-weight: 700; line-height: 36px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.anime-card__meta { display: flex; justify-content: space-between; margin-top: 8px; color: #8b8d93; font-size: 22px; }

@@ -1,0 +1,15 @@
+.detail__hero { position: relative; height: 410px; }
+.detail__banner { width: 100%; height: 100%; }
+.detail__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9,10,12,.08), #090a0c); }
+.detail__main { display: flex; align-items: flex-end; position: relative; z-index: 1; margin: -150px 28px 0; }
+.detail__poster { flex: none; width: 210px; height: 310px; border: 4px solid #090a0c; border-radius: 14px; background: #202126; }
+.detail__heading { min-width: 0; padding: 0 0 14px 24px; }
+.detail__title { display: block; color: #fff; font-size: 42px; font-weight: 900; line-height: 52px; }
+.detail__meta { display: block; margin-top: 14px; color: #aaaab0; font-size: 23px; line-height: 34px; }
+.detail__actions { display: flex; align-items: center; gap: 16px; margin-top: 30px; }
+.detail__watch { flex: 1; }
+.detail__round { width: 82px; height: 82px; border: 1px solid #3a3c42; border-radius: 41px; background: #1d1f24; color: #fff; font-size: 42px; line-height: 78px; text-align: center; }
+.detail__round.is-active { border-color: #f47521; color: #f47521; }
+.detail__body { margin-top: 30px; }
+.detail__description { color: #c7c7ca; font-size: 26px; line-height: 44px; }
+.detail__facts { display: flex; flex-direction: column; gap: 12px; margin-top: 26px; padding: 22px; border-radius: 12px; background: #16171b; color: #a8a8ad; font-size: 24px; line-height: 36px; }
