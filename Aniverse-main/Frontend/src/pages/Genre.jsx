@@ -2,8 +2,7 @@ import {useParams} from 'react-router-dom';
 import AnimeCards from '../components/AnimeCards';
 import {useSelector, useDispatch} from 'react-redux';
 import {fetchGenreAnimeData, clearGenreData} from '../redux/apifetch/GetanimeDataSlice';
-import {useEffect, useState} from 'react';
-import {useLocation} from 'react-router-dom';
+import {useCallback, useEffect, useState} from 'react';
 import LoadingAnimation from '../components/LoadingAnimation';
 
 
@@ -11,11 +10,9 @@ const Category = () => {
     const dispatch = useDispatch();
     const {name} = useParams();
     const [page, setPage] = useState(1);
-    const location = useLocation();
-
     const {GenreAnimeData} = useSelector((state) => state.AnimeData);
     const animes = GenreAnimeData?.data?.data?.animes || [];
-    const hasMore = GenreAnimeData?.data?.data?.hasNextPage !== false;
+    const hasMore = GenreAnimeData?.data?.data?.hasNextPage === true;
 
     useEffect(() => {
         setPage(1);
@@ -27,19 +24,11 @@ const Category = () => {
         };
     }, [dispatch, name]);
 
-    useEffect(() => {
-        setTimeout(() => {
-            window.scrollTo(0, 0);
-        }, 600);
-
-    }, [location.pathname]);
-
-
-    const fetchMoreData = () => {
+    const fetchMoreData = useCallback(async () => {
         const nextPage = page + 1;
-        dispatch(fetchGenreAnimeData({name, page: nextPage}));
+        await dispatch(fetchGenreAnimeData({name, page: nextPage})).unwrap();
         setPage(nextPage);
-    };
+    }, [dispatch, name, page]);
 
     if (!animes || animes.length === 0) {
         return (
